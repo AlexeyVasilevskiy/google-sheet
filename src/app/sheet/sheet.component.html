@@ -1,0 +1,51 @@
+<div class="wrapper">
+  <table (wheel)="onTableWheel($event)">
+    <tr *ngFor="let row of rows">
+      <td
+        *ngFor="let col of cols"
+        [ngStyle]="{
+          width: colWidth + 'px',
+          height: rowHeight + 'px'
+        }"
+        [ngClass]="{
+          header: col === 0 || row === 0
+        }"
+      >
+        <span *ngIf="col === 0 && row === 0; else cl"></span>
+
+        <ng-template #cl>
+          <span *ngIf="col === 0">{{ calculatedRowIndexes[row] }}</span>
+          <span *ngIf="row === 0">{{ calculatedColIndexes[col] }}</span>
+        </ng-template>
+
+        <ng-container *ngIf="col !== 0 && row !== 0">
+          <input
+            [readonly]="!isEdit"
+            type="text"
+            data-cell="true"
+            [attr.data-page]="
+              getPage(calculatedColIndexes[col], calculatedRowIndexes[row])
+            "
+            [attr.data-location]="
+              calculatedColIndexes[col] + '-' + calculatedRowIndexes[row]
+            "
+            [value]="
+              getCellData(
+                getPage(calculatedColIndexes[col], calculatedRowIndexes[row]),
+                calculatedColIndexes[col] + '-' + calculatedRowIndexes[row]
+              )
+            "
+          />
+        </ng-container>
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="sheet-container" (scroll)="onSheetContainerScroll($event)" #container>
+  <div
+    [style]="{
+      width: colWidth * (columnCount + 1) + 'px',
+      height: rowHeight * (rowCount + 1) + 8 + 'px'
+    }"
+  ></div>
+</div>
