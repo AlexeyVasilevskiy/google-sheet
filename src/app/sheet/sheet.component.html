@@ -4,8 +4,8 @@
       <td
         *ngFor="let col of cols"
         [ngStyle]="{
-          width: colWidth + 'px',
-          height: rowHeight + 'px'
+          width: toPx(colWidth),
+          height: toPx(rowHeight)
         }"
         [ngClass]="{
           header: col === 0 || row === 0
@@ -14,8 +14,8 @@
         <span *ngIf="col === 0 && row === 0; else cl"></span>
 
         <ng-template #cl>
-          <span *ngIf="col === 0">{{ calculatedRowIndexes[row] }}</span>
-          <span *ngIf="row === 0">{{ calculatedColIndexes[col] }}</span>
+          <span *ngIf="col === 0">{{ getHeaderRow(row) }}</span>
+          <span *ngIf="row === 0">{{ getHeaderCol(col) }}</span>
         </ng-template>
 
         <ng-container *ngIf="col !== 0 && row !== 0">
@@ -26,26 +26,23 @@
             [attr.data-page]="
               getPage(calculatedColIndexes[col], calculatedRowIndexes[row])
             "
-            [attr.data-location]="
-              calculatedColIndexes[col] + '-' + calculatedRowIndexes[row]
-            "
-            [value]="
-              getCellData(
-                getPage(calculatedColIndexes[col], calculatedRowIndexes[row]),
-                calculatedColIndexes[col] + '-' + calculatedRowIndexes[row]
-              )
-            "
+            [attr.data-location]="getCellLocation(col, row)"
+            [value]="getCellValue(col, row)"
           />
         </ng-container>
       </td>
     </tr>
   </table>
 </div>
-<div class="sheet-container" (scroll)="onSheetContainerScroll($event)" #container>
+<div
+  class="sheet-container"
+  (scroll)="onSheetContainerScroll($event)"
+  #container
+>
   <div
     [style]="{
-      width: colWidth * (columnCount + 1) + 'px',
-      height: rowHeight * (rowCount + 1) + 8 + 'px'
+      width: toPx(fakeContainerWidth),
+      height: toPx(fakeContainerHeight)
     }"
   ></div>
 </div>
